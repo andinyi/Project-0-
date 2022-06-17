@@ -1,33 +1,32 @@
 import pandas as pd 
+import pandasql as psql
 import json 
 
-#converts Json With Name -> Dataframe
+#converts Json With Name -> Dataframe -> CSV
 def returnDataframe(jsonFileName): 
     with open(jsonFileName) as file:
-        posts = json.load(file)
+        named = json.load(file)
 
-    df = pd.DataFrame(posts)
+    df = pd.DataFrame(named)
 
-    print(f"\033[93m {df}\033[00m")
+    df = df.transpose()
 
-    jsonFileName = jsonFileName.replace('.json', '')
-
-    df = df[jsonFileName]
     newDf = pd.DataFrame()
-    for i in range(df.count()):
-        tmp = pd.DataFrame.from_dict(df[i])
-        newDf = pd.concat([newDf, tmp], ignore_index=True)
     
-    if("tags" in newDf):
-        newDf = newDf.drop(columns="tags")
+    newDf = pd.concat([newDf, df["title"]], axis=1, ignore_index=True)
+    newDf = pd.concat([newDf, df["ingredients"]], axis=1, ignore_index=True)
 
-    if("images" in newDf):
-        newDf = newDf.drop(columns="images")  
+    newDf = newDf.reset_index(drop=True)
+
+    newDf[1] = newDf[1].apply(lambda s : ','.join(s))
+    newDf[1] = newDf[1].str.lower()
+
+    query = 'SELECT "0" as "Recipe Name", "1" as Ingredients FROM newDf'
     
-    newDf = newDf.drop_duplicates()
+    myDf = psql.sqldf(query)
 
-    return newDf
+    return myDf
 
-
-out = returnDataframe("posts.json")
-print(f"\033[92m {out}\033[00m")
+#requires a dataframe and a csvName to run (makes a csvFile)
+def toCsv(dataframe, csvName):
+    pd.DataFrame.to_csv(dataframe, csvName)
