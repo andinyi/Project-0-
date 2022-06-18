@@ -15,6 +15,10 @@ def printProgressBar(progress, total):
     print('\033[93m' + f"\r|{bar}| {percent:.2f}%" + '\033[0m', end="\r")
     if(progress == total):
         print('\033[92m' + f"\r|{bar}| {percent:.2f}%" + '\033[0m')
+
+def cleanIngred(string):
+    list = string.split(",")
+    return list
     
 
 

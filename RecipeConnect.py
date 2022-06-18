@@ -3,14 +3,14 @@ import pandas as pd
 import functions
 
 import connector
-import printing
 
 class recipe_connector(connector.Connector):
-    def createRecipe(self):
+
+    def createRecipe(self):  #CREATE
         self.cur.execute("CREATE DATABASE IF NOT EXISTS recipes")
         self.cur.execute("USE recipes")
 
-    def fillRecipes(self, df):
+    def fillRecipes(self, df): #CREATE
         self.cur.execute("USE recipes")
         self.cur.execute("CREATE TABLE IF NOT EXISTS recipes (`ID` INT NOT NULL AUTO_INCREMENT, `Recipe Name` TEXT, `Ingredients` TEXT, PRIMARY KEY(`ID`))")
         query = 'INSERT INTO recipes (`Recipe Name`, `Ingredients`) VALUES (%s, %s)'
@@ -21,7 +21,7 @@ class recipe_connector(connector.Connector):
 
         self.con.commit()
 
-    def getRecipesUsing(self, desiredIngredients):
+    def getRecipesUsing(self, desiredIngredients): #READ
         self.cur.execute("USE recipes")
         query = "SELECT * FROM recipes WHERE"
         for i, ingredient in enumerate(desiredIngredients):
@@ -33,4 +33,21 @@ class recipe_connector(connector.Connector):
         df = pd.read_sql(query, self.con)
         return df
 
+    def updateName(self, RecipeId, string): #UPDATE
+        self.cur.execute("USE recipes")
+        query = f"UPDATE recipes SET `Recipe Name` = '{string}' WHERE `ID` = {RecipeId}"
+        self.cur.execute(query)
+        self.con.commit()
     
+    def updateIngredients(self, RecipeId, string): #UPDATE
+        self.cur.execute("USE recipes") 
+        query = f"UPDATE recipes SET `Ingredients` = '{string}' WHERE `ID` = {RecipeId}"
+        self.cur.execute(query)
+        self.con.commit()
+    
+
+    def deleteRecipe(self, RecipeId): #DELETE
+        self.cur.execute("USE recipes")
+        query = f"DELETE FROM recipes WHERE `ID` = {RecipeId}"
+        self.cur.execute(query)
+        self.con.commit()
