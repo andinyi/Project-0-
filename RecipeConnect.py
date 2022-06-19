@@ -10,7 +10,7 @@ class recipe_connector(connector.Connector):
         self.cur.execute("CREATE DATABASE IF NOT EXISTS recipes")
         self.cur.execute("USE recipes")
 
-    def fillRecipes(self, df): #CREATE
+    def fillRecipes(self, df, string): #CREATE
         self.cur.execute("USE recipes")
         self.cur.execute("CREATE TABLE IF NOT EXISTS recipes (`ID` INT NOT NULL AUTO_INCREMENT, `Recipe Name` TEXT, `Ingredients` TEXT, PRIMARY KEY(`ID`))")
         query = 'INSERT INTO recipes (`Recipe Name`, `Ingredients`) VALUES (%s, %s)'

@@ -1,3 +1,5 @@
+import functions
+
 import pandas as pd
 from rich import print
 from rich.console import Console
@@ -12,7 +14,7 @@ class printing():
         self.console = Console()
 
     def printStart(self):
-        panel = Panel("Hello!",title="[bold orange1]Andy's Recipe Book![/]", title_align="center", subtitle="[bold light_steel_blue]A Small Productivity Tool for Cooking[/]")
+        panel = Panel("Welcome to Andy's Recipe Book, Also called Recipe Connect",title="[bold orange1]Andy's Recipe Book![/]", title_align="center", subtitle="[bold light_steel_blue]A Small Productivity Tool for Cooking[/]")
         self.console.print(panel)
         '''
         self.console.print("###############################################################", style="bold salmon1")
@@ -32,6 +34,10 @@ class printing():
         self.console.print("###############################################################", style="bold salmon1")
         self.console.print("###############################################################", style="bold salmon1")
         '''
+    
+    def printPanel(self, string):
+        panel = Panel(string)
+        self.console.print(panel)
 
     def cPrint(self, string):
         self.console.print(string)
@@ -44,8 +50,8 @@ class printing():
                 table.add_column(i, style="white")
             else:
                 table.add_column(i, style="orange1")
-        if("ID" in df.columns):
-            df["ID"] = pd.Series(df['ID'], dtype="string")
+        df = df.applymap(str)
         for index, row in df.iterrows():
             table.add_row(*(row))
+            functions.printProgressBar(index, len(df))
         self.console.print(table)
