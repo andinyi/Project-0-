@@ -1,6 +1,7 @@
 #Recipe Searching and Suggestions
 from DishifyList import Dishify
 import RecipeConnect as rc
+from Ingredients import ingredientsTable
 import functions
 import convertJson
 import loadCsv
@@ -17,7 +18,7 @@ import warnings
 
 load_dotenv("ID.env")
 
-sql = Dishify(os.getenv("user"), os.getenv("pass"), "localhost")
+sql = ingredientsTable(os.getenv("user"), os.getenv("pass"), "localhost")
 
 printVar = printing()
 printVar.printStart()
@@ -52,8 +53,39 @@ while(user != "exit"):
                 recipes_using_ingredients = sql.getRecipesUsing(functions.cleanIngred(user))
                 printVar.tablePrint(recipes_using_ingredients, f"Recipes using [light_steel_blue]{user}")
             elif(user == "2"):
-                #Searching using Ingredients Table
-                pass
+                printVar.printPanel("[bold cyan3]Currently fetching your ingredients...")
+                sql.createIngredientsTable()
+                printVar.tablePrintNoBar(sql.showIngredients(), "[bold orange1]Your ingredients")
+                printVar.printPanel("[bold cyan3]Would you like to add ([yellow]1[/]) or edit ([yellow]2[/]) your ingredients?")
+                user = functions.getInput()
+                if(user == "1"):
+                    printVar.printPanel("[bold cyan3]Please enter the [yellow]ingredient,ingredient,ingredient[/] format you would like the add to your ingredients list.")
+                    user = functions.getInput()
+                    sql.addToIngredients(functions.cleanIngred(user))
+                    printVar.printPanel("[bold green]Successfull added ingredient!")
+                elif(user == "2"):
+                    printVar.printPanel("[bold cyan3]Please enter the [yellow]ingredient id[/] of the ingredient you would like to edit.")
+                    user = functions.getInput()
+                    if(user == "exit"):
+                        break
+                    if(user.isdigit()):
+                        ingredientID = user
+                    else:
+                        printVar.printPanel("[bold red]ID is wrong format! Exiting!")
+                        break
+                    printVar.printPanel("[bold cyan3]ID received! Would you like to edit ([yellow]1[/]) or delete ([yellow]2[/])")
+                    user = functions.getInput()
+                    if(user == "1"): #UPDATE WORKING ✔
+                        printVar.printPanel("[bold cyan3]Please enter the [yellow]ingredient[/] to be added!")
+                        user = functions.getInput()
+                        sql.updateIngredient(ingredientID, user)
+                        printVar.printPanel("[bold green3]Update completed!")
+                    elif(user == "2"): #DELETE WORKING ✔
+                        sql.deleteIngredient(ingredientID)
+                        printVar.printPanel(f"[bold green3]Deleting ingredient with ID {ingredientID}..\n" +
+                                             "[bold green3]Successfully Deleted!")
+                    elif(user == "exit"):
+                        break
             elif(user == "exit"):
                 break
             printVar.printPanel("[bold cyan3]Moving back to main prompt, Enter 1 to continue")
@@ -92,14 +124,15 @@ while(user != "exit"):
                     sql.updateIngredients(recipeId, user)
                 elif(user == "exit"):
                     break
-                printVar.printPanel("[bold green3]Update completed! ✅")
+                printVar.printPanel("[bold green3]Update completed!")
             elif(user == "2"): #DELETE WORKING ✔
-                printVar.printPanel(f"[bold green3]Deleting recipe with ID {recipeId}..")
                 sql.deleteRecipe(recipeId)
-                printVar.printPanel(f"[bold green3]Successfully Deleted ✅")
+                printVar.printPanel(f"[bold green3]Deleting recipe with ID {recipeId}..\n" +
+                                     "[bold green3]Successfully Deleted!")
             elif(user == "exit"):
                 break
-        elif(user == "4"): #DISHIFY ❌
+            printVar.printPanel("[bold cyan3]Moving back to main prompt, Enter 1 to continue")
+        elif(user == "4"): #DISHIFY ✅
             printVar.printPanel("[bold cyan3]Currently fetching your Dishify...")
             sql.createDishify()
             printVar.tablePrint(sql.showDishify(), "[bold orange1]Your Dishify")
@@ -127,29 +160,33 @@ while(user != "exit"):
                     if(user == "1"):
                         printVar.printPanel("[bold cyan3]Please enter the new recipe name")
                         user = input()
+                        if(user == "exit"):
+                            break
                         sql.updateNameDishify(recipeId, user)
                     elif(user == "2"):
                         printVar.printPanel("[bold cyan3]Please enter the new recipe ingredients, be as concise as possible and include some instructtions if desired")
                         user = input()
+                        if(user == "exit"):
+                            break
                         sql.updateIngredientsDishify(recipeId, user)
                     elif(user == "exit"):
                         break
-                    printVar.printPanel("[bold green3]Update completed! ✅")
+                    printVar.printPanel("[bold green3]Update completed!")
                 elif(user == "2"): #DELETE WORKING ✔
-                    printVar.printPanel(f"[bold green3]Deleting recipe with ID {recipeId}..")
                     sql.deleteRecipeDishify(recipeId)
-                    printVar.printPanel(f"[bold green3]Successfully Deleted ✅")
+                    printVar.printPanel(f"[bold green3]Deleting recipe with ID {recipeId}.." +
+                                         "[bold green3]Successfully Deleted!")
                 elif(user == "exit"):
                     break
             elif(user == "exit"):
                 break
-            printVar.cPrint("[bold green3]Successfully updated to Dishify ✅")
-            printVar.cPrint("[bold cyan3]Moving back to main prompt, Enter 1 to continue")
+            printVar.printPanel("[bold green3]Successfully updated to Dishify!")
+            printVar.printPanel("[bold cyan3]Moving back to main prompt, Enter 1 to continue")
         elif(user == "exit"):
             break
         else:
-            printVar.cPrint("[bold red]Invalid Choice! Exiting ❌")
+            printVar.printPanel("[bold red]Invalid Choice! Exiting ❌")
     elif(user != "1"):
-        printVar.cPrint("[bold orange1]Please Enter 1 to Start the Program or Exit to exit the program.[/]")
+        printVar.printPanel("[bold orange1]Please Enter 1 to Start the Program or Exit to exit the program.[/]")
     user = functions.getInput()
 

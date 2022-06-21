@@ -7,7 +7,7 @@ import RecipeConnect
 class Dishify(RecipeConnect.recipe_connector):
     def createDishify(self):
         self.cur.execute("USE recipes")
-        self.cur.execute("CREATE TABLE IF NOT EXISTS Dishify (`dishifyId` INT NOT NULL AUTO_INCREMENT, `RecipeID` INT, `Recipe Name` TEXT, `Ingredients` TEXT, PRIMARY KEY (`dishifyID`), FOREIGN KEY (`RecipeID`) REFERENCES recipes(`ID`))")
+        self.cur.execute("CREATE TABLE IF NOT EXISTS Dishify (`dishifyId` INT NOT NULL AUTO_INCREMENT, `RecipeID` INT, `Recipe Name` TEXT, `Ingredients` TEXT, PRIMARY KEY (`dishifyID`), FOREIGN KEY (`RecipeID`) REFERENCES recipes(`ID`) ON UPDATE CASCADE ON DELETE CASCADE)")
     
     def showDishify(self):
         self.cur.execute("USE recipes")

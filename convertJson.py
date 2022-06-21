@@ -1,3 +1,5 @@
+from ntpath import join
+from numpy import dtype
 import pandas as pd 
 import pandasql as psql
 import json 
@@ -17,8 +19,9 @@ def returnDataframe(jsonFileName):
     newDf = pd.concat([newDf, df["ingredients"]], axis=1, ignore_index=True)
 
     newDf = newDf.reset_index(drop=True)
+    newDf = newDf.dropna()
 
-    newDf[1] = newDf[1].apply(lambda s : ','.join(s))
+    newDf[1] = newDf[1].apply(lambda s : ",".join(s))
     newDf[1] = newDf[1].str.lower()
 
     query = 'SELECT "0" as "Recipe Name", "1" as Ingredients FROM newDf'
@@ -30,3 +33,6 @@ def returnDataframe(jsonFileName):
 #requires a dataframe and a csvName to run (makes a csvFile)
 def toCsv(dataframe, csvName):
     pd.DataFrame.to_csv(dataframe, csvName)
+
+
+toCsv(returnDataframe("recipes_fn.json"), "recipes_fn.csv")

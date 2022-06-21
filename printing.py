@@ -55,3 +55,16 @@ class printing():
             table.add_row(*(row))
             functions.printProgressBar(index, len(df))
         self.console.print(table)
+    
+    def tablePrintNoBar(self, df, tableName): 
+        table = Table(title=tableName, style="bright_black")
+        table.show_lines = True
+        for i in df:
+            if(i == "Ingredients"):
+                table.add_column(i, style="white")
+            else:
+                table.add_column(i, style="orange1")
+        df = df.applymap(str)
+        for index, row in df.iterrows():
+            table.add_row(*(row))
+        self.console.print(table)
