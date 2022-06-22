@@ -14,7 +14,7 @@ class printing():
         self.console = Console()
 
     def printStart(self):
-        panel = Panel("Welcome to Andy's Recipe Book, Also called Recipe Connect",title="[bold orange1]Andy's Recipe Book![/]", title_align="center", subtitle="[bold light_steel_blue]A Small Productivity Tool for Cooking[/]")
+        panel = Panel("[cyan3]Welcome to Andy's Recipe Book, Also called Recipe Connect!\nEnter([yellow]1[/]) to Start the Program\nType ([yellow]exit[/]) anytime to end the Program\nA yellow color depicts choosable inputs!",title="[bold orange1]Andy's Recipe Book![/]", title_align="center", subtitle="[bold light_steel_blue]A Small Productivity Tool for Cooking[/]")
         self.console.print(panel)
         '''
         self.console.print("###############################################################", style="bold salmon1")
