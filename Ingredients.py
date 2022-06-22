@@ -25,7 +25,7 @@ class ingredientsTable(DishifyList.Dishify):
 
     def updateIngredient(self, id, string): #UPDATE
         self.cur.execute("USE recipes") 
-        query = f"UPDATE ingredients SET `ingredient` = '{string}' WHERE `ingredientID` = {id}"
+        query = f"""UPDATE ingredients SET `ingredient` = "{string}" WHERE `ingredientID` = {id}"""
         self.cur.execute(query)
         self.con.commit()
 
@@ -34,3 +34,10 @@ class ingredientsTable(DishifyList.Dishify):
         query = f"DELETE FROM ingredients WHERE `ingredientID` = {id}"
         self.cur.execute(query)
         self.con.commit()
+
+    def getIngredients(self):
+        self.cur.execute("USE recipes")
+        query = "SELECT * FROM ingredients"
+        df = pd.read_sql(query, self.con)
+        ingredList = df["ingredient"].tolist()
+        return ingredList

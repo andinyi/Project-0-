@@ -17,6 +17,7 @@ def returnDataframe(jsonFileName):
     
     newDf = pd.concat([newDf, df["title"]], axis=1, ignore_index=True)
     newDf = pd.concat([newDf, df["ingredients"]], axis=1, ignore_index=True)
+    newDf = pd.concat([newDf, df["instructions"]], axis =1, ignore_index=True)
 
     newDf = newDf.reset_index(drop=True)
     newDf = newDf.dropna()
@@ -24,7 +25,7 @@ def returnDataframe(jsonFileName):
     newDf[1] = newDf[1].apply(lambda s : ",".join(s))
     newDf[1] = newDf[1].str.lower()
 
-    query = 'SELECT "0" as "Recipe Name", "1" as Ingredients FROM newDf'
+    query = 'SELECT "0" as "Recipe Name", "1" as Ingredients, "2" as Instructions FROM newDf'
     
     myDf = psql.sqldf(query)
 
